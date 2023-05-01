@@ -62,38 +62,76 @@ typedef long long int int64;
 typedef unsigned long long int  uint64;
 
 /* clang-format on */
+
+vector<int> createLps(string &pat)
+{
+    vector<int> lps(pat.size());
+    int index = 0, i = 1;
+    lps[0] = 0;
+
+    while (i < pat.size())
+    {
+        if (pat[index] == pat[i])
+            lps[i++] = ++index;
+        else if (index != 0)
+            index = lps[--index];
+        else
+            lps[i++] = index;
+    }
+
+    return lps;
+}
+
 /* Main()  function */
 int main()
 {
     string song;
     cin >> song;
 
-    string wub = "WUB";
-    string result = "";
-    int j = 0;
-    bool shouldPutSpace = false;
-    for (int i = 0; i < song.size() - 2;)
+    string pat = "WUB";
+
+    vector<int> lps = createLps(pat);
+    int i = 0, j = 0;
+
+    vector<char> res;
+
+    while (i < song.size())
     {
-        if (song[i] == 'W' && song[i + 1] == 'U' && song[i + 2] == 'B')
+        if (song[i] == pat[j])
         {
-            i += 3;
-            if (result[j] != ' ' && shouldPutSpace)
-            {
-                result += ' ';
-                j++;
-                shouldPutSpace = false;
-            }
+            i++;
+            j++;
         }
         else
         {
-            result += song[i];
-            j++;
-            i++;
-            shouldPutSpace = true;
+            if (j != 0)
+                j = lps[--j];
+            else
+                i++;
+        }
+
+        if (j == pat.size())
+        {
+            for (int k = i - 1; k >= i - j; k--)
+            {
+                song[k] = ' ';
+            }
         }
     }
 
-    cout << result << endl;
+    stringstream ss(song);
+    string word;
+    string output = "";
+
+    while (ss >> word)
+    {
+        output += word + " ";
+    }
+
+    output.pop_back();
+
+    cout << output << endl;
+
     return 0;
 }
 /* Main() Ends Here */
