@@ -80,7 +80,6 @@ int main()
 
     sort(puzzels.begin(), puzzels.end());
 
-    vi difference;
     int dif = 999999999 ,j(n-1);
 
     for(int i=0;i<m-n+1;i++){
